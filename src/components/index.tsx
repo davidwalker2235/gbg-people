@@ -4,6 +4,9 @@ import FilterComponent from './filterComponent/FilterComponent';
 import ExpansionPanelComponent from './expansionPanelComponent/ExpansionPanelComponent';
 import PersonInfo from './personInfo/PersonInfo';
 import Modal from './modal/Modal';
+import Multiselect from "./multiselect/Multiselect";
+import AlertComponent from "./alert/AlertComponent";
+import AddEditUserComponent from "./addEdit/AddEditUserComponent";
 
 export {
     Loading,
@@ -11,5 +14,8 @@ export {
     FilterComponent,
     ExpansionPanelComponent,
     PersonInfo,
-    Modal
+    Modal,
+    Multiselect,
+    AlertComponent,
+    AddEditUserComponent
 }

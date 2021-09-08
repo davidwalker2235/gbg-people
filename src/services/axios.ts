@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { parseFromApiToPerson } from '../shared/models';
-import {PageValuesRequest} from "../interfaces/appInterfaces";
+import {IPersonRequest, PageValuesRequest} from "../interfaces/appInterfaces";
 
 class Service {
   getGlobalData = async () => {
@@ -34,6 +34,32 @@ class Service {
     try {
       const response = await axios.post('https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-filtered-values', payload);
       return parseFromApiToPerson({person: response?.data});
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  getAllGender = async () => {
+    try {
+      const response = await axios.get('https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-all-gender');
+      return (response?.data && response.data.length) ? response.data.map((gender: any) => gender.gender) : [];
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  getAllCities = async () => {
+    try {
+      const response = await axios.get('https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-all-cities');
+      return (response?.data && response.data.length) ? response.data.map((city: any) => city.home_city) : [];
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  createPerson = async (payload: IPersonRequest) => {
+    try {
+      return await axios.post('https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/create-person', payload);
     } catch (error) {
       alert(error)
     }

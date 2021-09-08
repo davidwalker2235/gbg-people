@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import {FilterComponent} from '../../components';
+import {FilterComponent, AddEditUserComponent} from '../../components';
 import styles from './styles';
 import locale from '../../shared/locale';
 import logo from '../../shared/images/gbg-group-logo.svg';
@@ -17,6 +17,7 @@ import { Button } from '@material-ui/core';
 import {ListTypeEnum} from '../../shared/enums';
 import {useGetFilteredPersonsMutation, useGetPageValuesMutation} from "../../query/gbg-people.query";
 import {setPersonListData} from "../../actions/listActions";
+import {showModal} from "../../actions/modalActions";
 
 const AppBarComponent: FC<any> = ({children}) => {
   const dispatch = useDispatch();
@@ -61,6 +62,12 @@ const AppBarComponent: FC<any> = ({children}) => {
     dispatch(removeClearFilters());
   }
 
+  const onClickNewUser = () => {
+    dispatch(showModal(
+      <AddEditUserComponent />
+    ));
+  }
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="fixed">
@@ -83,6 +90,9 @@ const AppBarComponent: FC<any> = ({children}) => {
           {isFiltered && <Button variant="contained" color="secondary" onClick={onClickClearFilter}>
             {locale.ClearFilters}
           </Button>}
+          <Button variant="contained" color="primary" onClick={onClickNewUser}>
+            {locale.NewUser}
+          </Button>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

@@ -1,4 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {Person, PersonInfoProps} from '../../interfaces/appInterfaces';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,8 +10,12 @@ import locale from '../../shared/locale';
 import { PersonEnum } from '../../shared/enums';
 import {useGetPersonData} from "../../query/gbg-people.query";
 import images from '../../shared/images';
+import {Button} from "@material-ui/core";
+import {hideModal, showModal} from "../../actions/modalActions";
+import {AlertComponent, AddEditUserComponent} from "../";
 
 const PersonInfo: FC<PersonInfoProps> = ({id}) => {
+  const dispatch = useDispatch();
   const classes = styles();
   const [data, setData] = useState();
   const [personImage, setPersonImage] = useState();
@@ -38,6 +43,29 @@ const PersonInfo: FC<PersonInfoProps> = ({id}) => {
       // @ts-ignore
       return images[data.forename];
     }
+  }
+
+  const handleCancel = () => {
+    dispatch(hideModal());
+  }
+
+  const handleRemovePerson = () => {
+    if (data) {
+      // @ts-ignore
+      return images[data.forename];
+    }
+  }
+
+  const handleOnClickEdit = () => {
+    dispatch(showModal(
+      <AddEditUserComponent data={data} />
+    ));
+  }
+
+  const handleOnClickRemove = () => {
+    dispatch(showModal(
+      <AlertComponent text={locale.DoYouWantToRemove} onCancel={handleCancel} onAccept={handleRemovePerson}/>
+    ));
   }
 
   return (
@@ -84,6 +112,16 @@ const PersonInfo: FC<PersonInfoProps> = ({id}) => {
                 </Grid>
               </Grid>
             </Grid>
+          </div>
+        </Grid>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
+          <div className={classes.buttonRoot}>
+            <Button className={classes.button} variant="contained" color="primary" onClick={handleOnClickEdit}>
+              {locale.Edit}
+            </Button>
+            <Button className={classes.button} variant="contained" color="secondary" onClick={handleOnClickRemove}>
+              {locale.Remove}
+            </Button>
           </div>
         </Grid>
       </Grid>

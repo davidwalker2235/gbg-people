@@ -3,7 +3,7 @@ import {useMutation, useQuery} from 'react-query';
 import Service from '../services/axios';
 import {Queries} from "./query.enum";
 import {useDispatch} from "react-redux";
-import {PageValuesRequest, Person} from "../interfaces/appInterfaces";
+import {IPersonRequest, PageValuesRequest, Person} from "../interfaces/appInterfaces";
 import {hideLoading, showLoading} from "../actions/loadingActions";
 
 const service = new Service();
@@ -16,6 +16,16 @@ const useGetAllDataValue = () => useQuery(
 const useGetPersonData = (id: number) => useQuery(
     Queries.GetPersonData,
     () => service.getPersonData(id),
+);
+
+const useGetAllGender = () => useQuery(
+    Queries.GetAllGender,
+    () => service.getAllGender(),
+);
+
+const useGetAllCities = () => useQuery(
+    Queries.GetAllCities,
+    () => service.getAllCities(),
 );
 
 const useGetPageValuesMutation = ({onSuccess}: {onSuccess: (result: Person[]) => void}) => {
@@ -56,9 +66,30 @@ const useGetFilteredPersonsMutation = ({onSuccess}: any) => {
     );
 };
 
+const useCreatePersonMutation = () => {
+    const dispatch = useDispatch();
+    return useMutation(
+      (payload: IPersonRequest) => {
+          dispatch(showLoading());
+          return service.createPerson(payload)
+      },
+      {
+          onSuccess: () => {
+              dispatch(hideLoading())
+          },
+          onError: () => {
+              dispatch(hideLoading())
+          }
+      }
+    );
+};
+
 export {
     useGetAllDataValue,
     useGetPageValuesMutation,
     useGetPersonData,
-    useGetFilteredPersonsMutation
+    useGetFilteredPersonsMutation,
+    useGetAllGender,
+    useGetAllCities,
+    useCreatePersonMutation
 };

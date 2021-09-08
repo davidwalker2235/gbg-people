@@ -25,6 +25,27 @@ export interface Person {
   [key: string]: string | number;
 }
 
+export interface IPersonRequest {
+  date_of_birth: string | null;
+  email_address: string | null;
+  forename: string | null;
+  gender: string | null;
+  home_building_name: string | null;
+  home_building_number: string | null;
+  home_city: string | null;
+  home_county: string | null;
+  home_phone_number: string | null;
+  home_postcode: string | null;
+  home_street: string | null;
+  home_sub_building: string | null;
+  middle_names: string | null;
+  mobile_phone_number: string | null;
+  picture: string | null;
+  surname: string | null;
+  title: string | null;
+  [key: string]: string | number | null;
+}
+
 export interface PageValuesRequest {
   start: number;
   end: number;
@@ -71,12 +92,12 @@ export interface State {
 // Actions
 export interface Actions {type: string, value?: any}
 
-// Loading screen
+// Multiselect screen
 export interface LoadingState {
   isLoading: boolean
 }
 
-// Modal screen
+// AddEditUserComponent screen
 export interface ModalState {
   isOpen: boolean;
   children: ReactNode;

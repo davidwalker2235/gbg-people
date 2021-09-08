@@ -3,9 +3,10 @@ import {
   ListInfoData,
   FriendsData,
   FilterData,
-  Actions,
   Person
 } from "../interfaces/appInterfaces";
+import moment from "moment";
+import 'moment/locale/es';
 
 export const getPersonsListByName = (data: any): ListInfoData => {
   const {name, globalData} = data;
@@ -15,8 +16,7 @@ export const getPersonsListByName = (data: any): ListInfoData => {
 }
 
 export const getPersonsList = (brastlewarkData: Person[]): ListInfoData => {
-  let listData: ListData[] = [];
-  listData = brastlewarkData && brastlewarkData.map(({id, forename, picture}) => ({id, forename, picture}));
+  let listData: ListData[] = brastlewarkData && brastlewarkData.map(({id, forename, picture}) => ({id, forename, picture}));
 
   return {listData};
 }
@@ -34,7 +34,12 @@ export const getFriendsList = (friendsList: string[], brastlewarkData: Person[])
   return friendsListData;
 }
 
-export const getFilterData = (globalData: Person[]): FilterData | void => {
+export const getMomentFromString = (date: string) => {
+  const sss = date ? moment(date, 'DD/MM/YYYY').locale('es') : moment();
+  return moment(sss);
+}
+
+export const getFilterData = (): FilterData | void => {
   /*
   let hair_color: string[] = [];
   let professions: string[] = [];
@@ -67,7 +72,7 @@ export const getFilterData = (globalData: Person[]): FilterData | void => {
   */
 };
 
-export const getListDataFromFilter = ({value}: Actions) => {
+export const getListDataFromFilter = () => {
   /*
   const {filterData, globalData} = value;
   const { name, hair_color, professions, ranges } = filterData;

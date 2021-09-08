@@ -11,12 +11,21 @@ const styles = makeStyles((theme: Theme) =>
     },
     details: {
       display: 'flex',
+      justifyContent: 'end',
       flexDirection: 'column',
       width: '100%'
     },
     content: {
       flex: '1 0 auto',
       padding: 0
+    },
+    buttonRoot: {
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'flex-end',
+    },
+    button: {
+      marginLeft: 20
     },
     cover: {
       width: 151,

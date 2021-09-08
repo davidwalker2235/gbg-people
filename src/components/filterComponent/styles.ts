@@ -12,7 +12,6 @@ const styles = makeStyles((theme) => ({
     width: '100%'
   },
   formControl: {
-    margin: theme.spacing(1),
     width: '100%'
   },
   list: {
@@ -39,6 +38,8 @@ const styles = makeStyles((theme) => ({
   },
   filterButton: {
     color: 'white',
+    width: '95%',
+    margin: theme.spacing(1),
     backgroundColor: 'purple',
     '&:hover': {
       backgroundColor: 'blue !important',

@@ -11,13 +11,13 @@ import './App.css';
 const App: FC<{}> = () => {
   const store = configureStore()
   return (
-    <Provider store={store}>
-      <Modal />
-      <Loading />
-        <QueryClientProvider client={queryClient}>
-            <RootNavigator history={history}/>
-        </QueryClientProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <Modal />
+        <Loading />
+              <RootNavigator history={history}/>
+      </Provider>
+    </QueryClientProvider>
   );
 }
 
