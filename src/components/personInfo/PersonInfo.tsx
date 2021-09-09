@@ -8,7 +8,7 @@ import Grid from '@material-ui/core/Grid';
 import styles from './styles';
 import locale from '../../shared/locale';
 import { PersonEnum } from '../../shared/enums';
-import {useGetPersonData} from "../../query/gbg-people.query";
+import {useDeletePersonMutation, useGetPersonData} from "../../query/gbg-people.query";
 import images from '../../shared/images';
 import {Button} from "@material-ui/core";
 import {hideModal, showModal} from "../../actions/modalActions";
@@ -21,6 +21,7 @@ const PersonInfo: FC<PersonInfoProps> = ({id}) => {
   const [personImage, setPersonImage] = useState();
 
   const {data: personData} = useGetPersonData(id);
+  const {mutateAsync: fetchDeletePerson} = useDeletePersonMutation()
 
   useEffect(() => {
     if (personData && personData.length) {
@@ -50,15 +51,12 @@ const PersonInfo: FC<PersonInfoProps> = ({id}) => {
   }
 
   const handleRemovePerson = () => {
-    if (data) {
-      // @ts-ignore
-      return images[data.forename];
-    }
+    fetchDeletePerson(id);
   }
 
   const handleOnClickEdit = () => {
     dispatch(showModal(
-      <AddEditUserComponent data={data} />
+      <AddEditUserComponent data={data} onCancel={handleCancel}/>
     ));
   }
 

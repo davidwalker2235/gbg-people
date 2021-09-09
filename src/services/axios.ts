@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { parseFromApiToPerson } from '../shared/models';
-import {IPersonRequest, PageValuesRequest} from "../interfaces/appInterfaces";
+import {IPersonRequest, IUpdateRequest, PageValuesRequest} from "../interfaces/appInterfaces";
 
 class Service {
   getGlobalData = async () => {
@@ -60,6 +60,22 @@ class Service {
   createPerson = async (payload: IPersonRequest) => {
     try {
       return await axios.post('https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/create-person', payload);
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  deletePerson = async (id: number) => {
+    try {
+      return await axios.delete('https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/delete-person',{ params: { id } });
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  updatePerson = async (payload: IUpdateRequest) => {
+    try {
+      return await axios.put('https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/update-person', payload);
     } catch (error) {
       alert(error)
     }

@@ -22,7 +22,7 @@ const AlertComponent: FC<IAlertComponent> = ({text, onAccept, onCancel}) => {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="secondary">
           {locale.Disagree}
         </Button>
         <Button onClick={onAccept} color="primary" autoFocus>

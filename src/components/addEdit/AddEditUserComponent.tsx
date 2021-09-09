@@ -17,7 +17,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {getMomentFromString} from "../../shared/utils";
 import { es } from "date-fns/locale";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {useCreatePersonMutation} from "../../query/gbg-people.query";
+import {useCreatePersonMutation, useUpdatePersonMutation} from "../../query/gbg-people.query";
 
 interface IAddEditComponent {
   data?: Person;
@@ -27,47 +27,39 @@ interface IAddEditComponent {
 
 const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
   const classes = styles();
-  const [personData, setPersonData] = useState<IPersonRequest>({
-    date_of_birth: null,
-    email_address: null,
-    forename: null,
-    gender: null,
-    home_building_name: null,
-    home_building_number: null,
-    home_city: null,
-    home_county: null,
-    home_phone_number: null,
-    home_postcode: null,
-    home_street: null,
-    home_sub_building: null,
-    middle_names: null,
-    mobile_phone_number: null,
-    picture: null,
-    surname: null,
-    title: null,
-  });
+  const [personData, setPersonData] = useState<IPersonRequest>({});
+  const [request, setRequest] = useState<IPersonRequest>({});
+
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
       setIsEdit(true);
-      setPersonData(data);
+      setPersonData(data as IPersonRequest);
+      const {id, ...rest} = data;
+      setRequest(rest as IPersonRequest);
     }
   }, [])
 
-  const {mutateAsync: fetchGetPage} = useCreatePersonMutation()
+  const {mutateAsync: fetchCreatePerson} = useCreatePersonMutation();
+  const {mutateAsync: fetchUpdatePerson} = useUpdatePersonMutation();
 
   const onChange = (event: any, key: PersonEnum) => {
-    setPersonData({...personData, [key]: event.target.value} as Person)
+    if(!event.target.value || event.target.value.length === 0) {
+      delete request[key];
+    } else {
+      setRequest({...request, [key]: event.target.value} as IPersonRequest)
+    }
+    setPersonData({...personData, [key]: event.target.value} as IPersonRequest)
   }
 
   const handleOnClickCreate = () => {
-    fetchGetPage(personData);
+    isEdit ? fetchUpdatePerson({id: data?.id as number, payload: request}) : fetchCreatePerson(request);
   }
 
   const onChangeDate = (date: MaterialUiPickersDate, key: string) => {
     const dateFormatted = date?.toLocaleDateString("es")
-    setPersonData({...personData, [key]: dateFormatted} as Person)
+    setPersonData({...personData, [key]: dateFormatted} as IPersonRequest)
   }
 
   const fields: any = {
@@ -82,8 +74,8 @@ const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
       <InputLabel id="demo-simple-select-label">{locale[field.key]}</InputLabel>
       <Select
         className={classes.select}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+        labelId={`demo-simple-select-label${personData[field.key]}`}
+        id={`demo-simple-select${personData[field.key]}`}
         value={personData[field.key]}
         onChange={(event) => onChange(event, field.key)}
       >
@@ -132,7 +124,7 @@ const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="secondary">
           {locale.Cancel}
         </Button>
         <Button onClick={handleOnClickCreate} color="primary" autoFocus>

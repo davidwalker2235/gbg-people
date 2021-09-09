@@ -93,7 +93,6 @@ export const getListDataFromFilter = () => {
   if (professions.length) {
     list = list.filter((person: Brastlewark) => person.professions.filter((profession: string) => professions.includes(profession)).length > 0)
   }
-
-  return list
    */
+  return []
 }

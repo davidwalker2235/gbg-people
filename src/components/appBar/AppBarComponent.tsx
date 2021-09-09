@@ -17,7 +17,7 @@ import { Button } from '@material-ui/core';
 import {ListTypeEnum} from '../../shared/enums';
 import {useGetFilteredPersonsMutation, useGetPageValuesMutation} from "../../query/gbg-people.query";
 import {setPersonListData} from "../../actions/listActions";
-import {showModal} from "../../actions/modalActions";
+import {hideModal, showModal} from "../../actions/modalActions";
 
 const AppBarComponent: FC<any> = ({children}) => {
   const dispatch = useDispatch();
@@ -62,9 +62,13 @@ const AppBarComponent: FC<any> = ({children}) => {
     dispatch(removeClearFilters());
   }
 
+  const handleCancel = () => {
+    dispatch(hideModal());
+  }
+
   const onClickNewUser = () => {
     dispatch(showModal(
-      <AddEditUserComponent />
+      <AddEditUserComponent onCancel={handleCancel}/>
     ));
   }
 

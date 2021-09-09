@@ -3,7 +3,7 @@ import {useMutation, useQuery} from 'react-query';
 import Service from '../services/axios';
 import {Queries} from "./query.enum";
 import {useDispatch} from "react-redux";
-import {IPersonRequest, PageValuesRequest, Person} from "../interfaces/appInterfaces";
+import {IPersonRequest, IUpdateRequest, PageValuesRequest, Person} from "../interfaces/appInterfaces";
 import {hideLoading, showLoading} from "../actions/loadingActions";
 
 const service = new Service();
@@ -84,6 +84,42 @@ const useCreatePersonMutation = () => {
     );
 };
 
+const useDeletePersonMutation = () => {
+    const dispatch = useDispatch();
+    return useMutation(
+      (id: number) => {
+          dispatch(showLoading());
+          return service.deletePerson(id)
+      },
+      {
+          onSuccess: () => {
+              dispatch(hideLoading())
+          },
+          onError: () => {
+              dispatch(hideLoading())
+          }
+      }
+    );
+};
+
+const useUpdatePersonMutation = () => {
+    const dispatch = useDispatch();
+    return useMutation(
+      (payload: IUpdateRequest) => {
+          dispatch(showLoading());
+          return service.updatePerson(payload)
+      },
+      {
+          onSuccess: () => {
+              dispatch(hideLoading())
+          },
+          onError: () => {
+              dispatch(hideLoading())
+          }
+      }
+    );
+};
+
 export {
     useGetAllDataValue,
     useGetPageValuesMutation,
@@ -91,5 +127,7 @@ export {
     useGetFilteredPersonsMutation,
     useGetAllGender,
     useGetAllCities,
-    useCreatePersonMutation
+    useCreatePersonMutation,
+    useDeletePersonMutation,
+    useUpdatePersonMutation
 };
