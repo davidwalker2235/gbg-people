@@ -5,13 +5,9 @@ import {Queries} from "./query.enum";
 import {useDispatch} from "react-redux";
 import {IPersonRequest, IUpdateRequest, PageValuesRequest, Person} from "../interfaces/appInterfaces";
 import {hideLoading, showLoading} from "../actions/loadingActions";
+import {hideModal} from "../actions/modalActions";
 
 const service = new Service();
-
-const useGetAllDataValue = () => useQuery(
-    Queries.GetAllData,
-    () => service.getGlobalData(),
-);
 
 const useGetPersonData = (id: number) => useQuery(
     Queries.GetPersonData,
@@ -66,7 +62,7 @@ const useGetFilteredPersonsMutation = ({onSuccess}: any) => {
     );
 };
 
-const useCreatePersonMutation = () => {
+const useCreatePersonMutation = ({onSuccess}: {onSuccess: () => void}) => {
     const dispatch = useDispatch();
     return useMutation(
       (payload: IPersonRequest) => {
@@ -75,59 +71,75 @@ const useCreatePersonMutation = () => {
       },
       {
           onSuccess: () => {
-              dispatch(hideLoading())
+            dispatch(hideLoading());
+            dispatch(hideModal())
+            onSuccess();
           },
           onError: () => {
-              dispatch(hideLoading())
+            dispatch(hideLoading())
           }
       }
     );
 };
 
-const useDeletePersonMutation = () => {
+const useDeletePersonMutation = ({onSuccess}: {onSuccess: () => void}) => {
     const dispatch = useDispatch();
     return useMutation(
       (id: number) => {
-          dispatch(showLoading());
-          return service.deletePerson(id)
+        dispatch(showLoading());
+        return service.deletePerson(id)
       },
       {
-          onSuccess: () => {
-              dispatch(hideLoading())
-          },
-          onError: () => {
-              dispatch(hideLoading())
-          }
+        onSuccess: () => {
+          dispatch(hideModal());
+          onSuccess();
+        },
+        onError: () => {
+          dispatch(hideLoading())
+        }
       }
     );
 };
 
-const useUpdatePersonMutation = () => {
+const useUpdatePersonMutation = ({onSuccess}: {onSuccess: () => void}) => {
     const dispatch = useDispatch();
     return useMutation(
       (payload: IUpdateRequest) => {
-          dispatch(showLoading());
-          return service.updatePerson(payload)
+        dispatch(showLoading());
+        return service.updatePerson(payload)
       },
       {
-          onSuccess: () => {
-              dispatch(hideLoading())
-          },
-          onError: () => {
-              dispatch(hideLoading())
-          }
+        onSuccess: () => {
+          dispatch(hideLoading())
+          onSuccess();
+        },
+        onError: () => {
+          dispatch(hideLoading())
+        }
       }
     );
 };
 
+const useGetTotalValuesMutation = ({onSuccess}: {onSuccess: (value: number) => void}) => {
+  return useMutation(
+    // @ts-ignore
+    () => {
+      return service.getGlobalData()
+    },
+    {
+      onSuccess
+    }
+  );
+};
+
 export {
-    useGetAllDataValue,
-    useGetPageValuesMutation,
-    useGetPersonData,
-    useGetFilteredPersonsMutation,
-    useGetAllGender,
-    useGetAllCities,
-    useCreatePersonMutation,
-    useDeletePersonMutation,
-    useUpdatePersonMutation
+  useGetPageValuesMutation,
+  useGetPersonData,
+  useGetFilteredPersonsMutation,
+  useGetAllGender,
+  useGetAllCities,
+  useCreatePersonMutation,
+  useDeletePersonMutation,
+  useUpdatePersonMutation,
+  useGetTotalValuesMutation
 };

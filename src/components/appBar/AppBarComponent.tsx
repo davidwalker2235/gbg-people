@@ -60,6 +60,7 @@ const AppBarComponent: FC<any> = ({children}) => {
 
   const onClickClearFilter = () => {
     dispatch(removeClearFilters());
+    fetchGetPage({start: 0, end: 10});
   }
 
   const handleCancel = () => {
@@ -91,7 +92,7 @@ const AppBarComponent: FC<any> = ({children}) => {
           <div className={classes.title}>
             <img className={classes.logoImageTitle} alt='CoverImage' src={logo} />
           </div>
-          {isFiltered && <Button variant="contained" color="secondary" onClick={onClickClearFilter}>
+          {isFiltered && <Button className={classes.clearFilterButton} variant="contained" color="secondary" onClick={onClickClearFilter}>
             {locale.ClearFilters}
           </Button>}
           <Button variant="contained" color="primary" onClick={onClickNewUser}>

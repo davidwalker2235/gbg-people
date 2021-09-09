@@ -56,18 +56,6 @@ export interface PageValuesRequest {
   end: number;
 }
 
-export interface BrastlewarkProp {
-  id?: number;
-  name?: string;
-  thumbnail?: string;
-  age?: number;
-  weight?: number;
-  height?: number;
-  hair_color?: string;
-  professions?: Array<string>;
-  friends?: Array<string>;
-}
-
 export interface GlobalData {
   person: Person[]
 }
@@ -89,7 +77,6 @@ export interface State {
   modal: ModalState;
   home: HomeProps;
   list: ListProps;
-  person: PersonProps;
   filter: FilterState;
   router: RouterState;
 }
@@ -122,7 +109,7 @@ export interface CoverProps {
 export interface ListProps {
   route?: any;
   personListData: Person[];
-  friendsListData: FriendsData[];
+  numOfPages: number;
   listType?: ListTypeEnum;
   listData?: ListData[];
   onClickRow?: (name?: string, id?: number) => void;
@@ -136,40 +123,18 @@ export interface ListRows {
   onClickFriend: (personId: number | undefined) => void;
 }
 
-export interface FriendsData {
-  id: number;
-  thumbnail: string;
-}
-
-// Person
-export interface PersonProps {
-  personData: BrastlewarkProp;
-  friendData: BrastlewarkProp;
-}
-
 export interface PersonInfoProps {
   id: number;
 }
 
-// Filter
-export interface filterMaxMinValues {
-  ageMaxValue: number;
-  ageMinValue: number;
-  weightMaxValue: number;
-  weightMinValue: number;
-  heightMaxValue: number;
-  heightMinValue: number;
-  [key: string]: number;
-}
 export interface FilterData {
-  professions: string[];
-  hair_color: string[];
-  ranges: filterMaxMinValues;
+  forename?: string;
+  gender?: string[];
+  city?: string[];
   [key: string]: any;
 }
 
 export interface FilterState {
-  personName: string;
-  filterData?: FilterData | undefined;
+  filterData: FilterData;
   isFiltered?: boolean
 }

@@ -1,6 +1,6 @@
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 
-const styles = makeStyles((theme: Theme) =>
+const styles = makeStyles(() =>
   createStyles({
     root: {
       display: 'flex',
@@ -30,24 +30,10 @@ const styles = makeStyles((theme: Theme) =>
     cover: {
       width: 151,
     },
-    controls: {
-      display: 'flex',
-      alignItems: 'center',
-      paddingLeft: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
-    },
-    playIcon: {
-      height: 38,
-      width: 38,
-    },
     imageContainer: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    friendsThubnails: {
-      display: 'flex',
-      alignItems: 'center'
     }
   }),
 );

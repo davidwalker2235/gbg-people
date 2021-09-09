@@ -1,4 +1,5 @@
 import React, {FC, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -9,7 +10,7 @@ import CardContent from "@material-ui/core/CardContent";
 import styles from './styles';
 import {IPersonRequest, Person} from "../../interfaces/appInterfaces";
 import {TextField, InputLabel, Select, MenuItem} from "@material-ui/core";
-import {PersonEnum} from "../../shared/enums";
+import {ListTypeEnum, PersonEnum} from "../../shared/enums";
 import formConfig from './formConfig';
 import { DatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -17,7 +18,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import {getMomentFromString} from "../../shared/utils";
 import { es } from "date-fns/locale";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import {useCreatePersonMutation, useUpdatePersonMutation} from "../../query/gbg-people.query";
+import {useCreatePersonMutation, useGetPageValuesMutation, useUpdatePersonMutation} from "../../query/gbg-people.query";
+import {setPersonListData} from "../../actions/listActions";
 
 interface IAddEditComponent {
   data?: Person;
@@ -27,6 +29,7 @@ interface IAddEditComponent {
 
 const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
   const classes = styles();
+  const dispatch = useDispatch();
   const [personData, setPersonData] = useState<IPersonRequest>({});
   const [request, setRequest] = useState<IPersonRequest>({});
 
@@ -41,8 +44,20 @@ const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
     }
   }, [])
 
-  const {mutateAsync: fetchCreatePerson} = useCreatePersonMutation();
-  const {mutateAsync: fetchUpdatePerson} = useUpdatePersonMutation();
+  const {mutateAsync: fetchCreatePerson} = useCreatePersonMutation({onSuccess: () => {
+      fetchGetPage({start: 0, end: 10});
+    }});
+  const {mutateAsync: fetchUpdatePerson} = useUpdatePersonMutation({onSuccess: () => {
+      fetchGetPage({start: 0, end: 10});
+    }});
+  const {mutateAsync: fetchGetPage} = useGetPageValuesMutation({
+    onSuccess: (response: Person[]) => {
+      dispatch(setPersonListData({
+        listType: ListTypeEnum.PERSON,
+        listData: response
+      }));
+    }
+  })
 
   const onChange = (event: any, key: PersonEnum) => {
     if(!event.target.value || event.target.value.length === 0) {

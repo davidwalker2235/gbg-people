@@ -1,17 +1,17 @@
-import { SET_PERSON_LIST_DATA, SET_FRIENDS_LIST_DATA} from '../constants/constants';
+import { SET_PERSON_LIST_DATA, SET_NUM_OF_PAGES} from '../constants/constants';
 import { Actions, ListProps } from '../interfaces/appInterfaces';
 
 const initialState: ListProps = {
   personListData: [],
-  friendsListData: []
+  numOfPages: 0
 }
 
 export default function listReducer(state: ListProps = initialState, action: Actions) {
   switch (action.type) {
     case SET_PERSON_LIST_DATA:
       return { ...state, personListData: action.value.listData };
-    case SET_FRIENDS_LIST_DATA:
-      return { ...state, friendsListData: action.value };
+    case SET_NUM_OF_PAGES:
+      return { ...state, numOfPages: action.value };
     default:
       return state;
   }

@@ -10,19 +10,23 @@ import {ExpansionPanelComponent} from '../../components';
 import backgroundFog from '../../shared/images/fogBackground.png';
 import { getPersonData } from '../../actions/personActions';
 import Typography from '@material-ui/core/Typography';
-import {useGetAllDataValue, useGetPageValuesMutation} from "../../query/gbg-people.query";
-import {setPersonListData} from "../../actions/listActions";
+import {useGetPageValuesMutation, useGetTotalValuesMutation} from "../../query/gbg-people.query";
+import {setNumOfPages, setPersonListData} from "../../actions/listActions";
 import {ListTypeEnum} from "../../shared/enums";
-import {hideLoading, showLoading} from "../../actions/loadingActions";
 
 const PersonsList: FC<ListProps> = () => {
   const classes = styles();
   const dispatch = useDispatch();
   const [expandedPanel, setExpandedPanel] = useState<string | boolean>(false);
   const personListData = useSelector((state: State) => state.list.personListData);
+  const numOfPages = useSelector((state: State) => state.list.numOfPages);
   const [page, setPage] = useState(1);
 
-  const {isLoading, data: globalData} = useGetAllDataValue();
+  const {mutateAsync: fetchGetTotalNumberOfValues} = useGetTotalValuesMutation({
+    onSuccess: (values: number) => {
+      dispatch(setNumOfPages(values as number));
+    }
+  })
   const {mutateAsync: fetchGetPage} = useGetPageValuesMutation({
     onSuccess: (response: Person[]) => {
       dispatch(setPersonListData({
@@ -35,17 +39,14 @@ const PersonsList: FC<ListProps> = () => {
   const VALUES_PER_PAGE = 10;
 
   useEffect(() => {
-    const persons: any = fetchGetPage({start: 0, end: 10});
-    dispatch(setPersonListData({listData: persons}))
+    fetchGetPage({start: 0, end: VALUES_PER_PAGE});
   },[]);
 
   useEffect(() => {
     setExpandedPanel(false);
-  },[personListData]);
-
-  useEffect(() => {
-    isLoading ? dispatch(showLoading()) : dispatch(hideLoading());
-  },[isLoading]);
+    setPage(1);
+    fetchGetTotalNumberOfValues()
+  },[personListData, numOfPages]);
 
   const handleSelectPerson = (personId: number | undefined, panelId: string | boolean) => {
     dispatch(getPersonData(personId, personListData));
@@ -59,7 +60,7 @@ const PersonsList: FC<ListProps> = () => {
   };
 
   const getNumberOfPages = () => {
-    return Math.ceil(globalData as number / VALUES_PER_PAGE);
+    return Math.ceil(numOfPages / VALUES_PER_PAGE);
   }
 
   return (

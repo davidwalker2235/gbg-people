@@ -7,12 +7,13 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import styles from './styles';
 import locale from '../../shared/locale';
-import { PersonEnum } from '../../shared/enums';
-import {useDeletePersonMutation, useGetPersonData} from "../../query/gbg-people.query";
+import {ListTypeEnum, PersonEnum} from '../../shared/enums';
+import {useDeletePersonMutation, useGetPageValuesMutation, useGetPersonData} from "../../query/gbg-people.query";
 import images from '../../shared/images';
 import {Button} from "@material-ui/core";
 import {hideModal, showModal} from "../../actions/modalActions";
 import {AlertComponent, AddEditUserComponent} from "../";
+import {setPersonListData} from "../../actions/listActions";
 
 const PersonInfo: FC<PersonInfoProps> = ({id}) => {
   const dispatch = useDispatch();
@@ -20,8 +21,18 @@ const PersonInfo: FC<PersonInfoProps> = ({id}) => {
   const [data, setData] = useState();
   const [personImage, setPersonImage] = useState();
 
+  const {mutateAsync: fetchGetPage} = useGetPageValuesMutation({
+    onSuccess: (response: Person[]) => {
+      dispatch(setPersonListData({
+        listType: ListTypeEnum.PERSON,
+        listData: response
+      }));
+    }
+  })
   const {data: personData} = useGetPersonData(id);
-  const {mutateAsync: fetchDeletePerson} = useDeletePersonMutation()
+  const {mutateAsync: fetchDeletePerson} = useDeletePersonMutation({onSuccess: () => {
+      fetchGetPage({start: 0, end: 10});
+    }})
 
   useEffect(() => {
     if (personData && personData.length) {

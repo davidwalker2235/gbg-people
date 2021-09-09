@@ -47,6 +47,9 @@ const styles = makeStyles((theme) => ({
     filterIcon: {
       marginLeft: 10
     },
+    clearFilterButton: {
+      marginRight: 10
+    },
     inputRoot: {
       color: 'inherit',
     },

@@ -1,7 +1,5 @@
 export enum ListTypeEnum {
-  PERSON,
-  PROFESSION,
-  PERSON_FROM_PROFESSION
+  PERSON
 }
 
 export enum PersonEnum {
@@ -23,4 +21,16 @@ export enum PersonEnum {
   PICTURE = 'picture',
   SURNAME = 'surname',
   TITLE = 'title',
+}
+
+export enum UrlEnum {
+  GET_ALL_VALUES = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-all-values',
+  GET_PERSON_VALUES = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-person-values',
+  GET_PAGE_VALUES = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-page-values',
+  GET_FILTERED_VALUES = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-filtered-values',
+  GET_ALL_GENDER = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-all-gender',
+  GET_ALL_CITIES = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/get-all-cities',
+  CREATE_PERSON = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/create-person',
+  DELETE_PERSON = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/delete-person',
+  UPDATE_PERSON = 'https://f77t0ctpqh.execute-api.us-east-2.amazonaws.com/development/update-person',
 }
