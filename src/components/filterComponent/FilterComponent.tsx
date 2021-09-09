@@ -47,8 +47,8 @@ const FilterComponent: FC<{}> = () => {
   })
 
   useEffect(() => {
-    setGenders(gendersResponse);
-    setCities(citiesResponse);
+    setGenders(gendersResponse as string[]);
+    setCities(citiesResponse as string[]);
   }, [gendersResponse, citiesResponse])
 
   const onChangeName = (event: any) => {
