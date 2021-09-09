@@ -32,8 +32,10 @@ const locale = {
   NewUser: 'New User',
   picture: 'Picture',
   Remove: 'Remove',
+  surname: 'Surname',
   SearchByPersonsName: "Search by name",
   SelectToFilter: 'Select to filter',
+  title: 'Title',
   Update: 'Update',
 }
 

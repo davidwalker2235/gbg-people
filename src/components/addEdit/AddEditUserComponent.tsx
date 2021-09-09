@@ -91,6 +91,7 @@ const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
         className={classes.select}
         labelId={`demo-simple-select-label${personData[field.key]}`}
         id={`demo-simple-select${personData[field.key]}`}
+        defaultValue={data && data[field.key]}
         value={personData[field.key]}
         onChange={(event) => onChange(event, field.key)}
       >

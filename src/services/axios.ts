@@ -43,7 +43,11 @@ class Service {
   getAllGender = async () => {
     try {
       const response = await axios.get(UrlEnum.GET_ALL_GENDER);
-      return (response?.data && response.data.length) ? response.data.map((gender: any) => gender.gender) : [];
+      let citiesAry: string[] = [];
+      if (response?.data && response.data.length) response.data.forEach((gender: any) => {
+        if (gender?.gender?.length) citiesAry.push(gender.gender)
+      });
+      return citiesAry;
     } catch (error) {
       alert(error)
     }
@@ -52,7 +56,11 @@ class Service {
   getAllCities = async () => {
     try {
       const response = await axios.get(UrlEnum.GET_ALL_CITIES);
-      return (response?.data && response.data.length) ? response.data.map((city: any) => city.home_city) : [];
+      let citiesAry: string[] = [];
+      if (response?.data && response.data.length) response.data.forEach((city: any) => {
+        if (city?.home_city?.length) citiesAry.push(city.home_city)
+      });
+      return citiesAry;
     } catch (error) {
       alert(error)
     }

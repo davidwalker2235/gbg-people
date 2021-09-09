@@ -111,6 +111,7 @@ const useUpdatePersonMutation = ({onSuccess}: {onSuccess: () => void}) => {
       {
         onSuccess: () => {
           dispatch(hideLoading())
+          dispatch(hideModal())
           onSuccess();
         },
         onError: () => {
