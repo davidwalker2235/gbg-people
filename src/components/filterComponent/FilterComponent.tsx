@@ -9,8 +9,8 @@ import {
 } from '@material-ui/core';
 import locale from '../../shared/locale';
 import {useDispatch, useSelector} from 'react-redux';
-import { Person, State} from '../../interfaces/appInterfaces';
-import {removeClearFilters} from '../../actions/filterActions';
+import {FilterData, Person, State} from '../../interfaces/appInterfaces';
+import {removeClearFilters, setFilterData} from '../../actions/filterActions';
 import {ListTypeEnum, PersonEnum} from '../../shared/enums';
 import {
   useGetAllCities,
@@ -21,23 +21,13 @@ import {
 import {setPersonListData} from "../../actions/listActions";
 import {Multiselect} from "../index";
 
-interface MultiselectData {
-  [key: string]: string[];
-}
-
-const emptyMultiSelectValue: MultiselectData = {
-  [PersonEnum.GENDER]: [],
-  [PersonEnum.HOME_CITY]: []
-}
-
 const FilterComponent: FC<{}> = () => {
   const dispatch = useDispatch();
   const isFiltered: boolean | undefined = useSelector((state: State) => state.filter.isFiltered);
-  const [statePersonName, setStatePersonName] = useState<string>('');
+  const filterData: FilterData = useSelector((state: State) => state.filter.filterData);
   const classes = styles();
   const [genders, setGenders] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
-  const [stateMultiSelectValue, setStateMultiSelectValue] = useState<MultiselectData>(emptyMultiSelectValue);
 
   const {data: gendersResponse} = useGetAllGender();
   const {data: citiesResponse} = useGetAllCities();
@@ -62,16 +52,15 @@ const FilterComponent: FC<{}> = () => {
   }, [gendersResponse, citiesResponse])
 
   const onChangeName = (event: any) => {
-    setStatePersonName(event.target.value)
+    dispatch(setFilterData({...filterData, [PersonEnum.FORENAME]: event.target.value}))
   }
 
   const onClickFilter = () => {
-    let payload = {};
-    if(statePersonName.length) payload = {...payload, [PersonEnum.FORENAME]: statePersonName};
-    Object.keys(stateMultiSelectValue).forEach((key) => {
-      if(stateMultiSelectValue[key].length) payload = {...payload, [key]: stateMultiSelectValue[key]};
+    let payload: FilterData = {};
+    if(filterData[PersonEnum.FORENAME]?.length) payload = {...payload, [PersonEnum.FORENAME]: filterData[PersonEnum.FORENAME]};
+    Object.keys(filterData).forEach((key) => {
+      if(filterData[key].length) payload = {...payload, [key]: filterData[key]};
     })
-
     if (Object.keys(payload).length) {
       fetchGetFilteredData(payload)
     } else {
@@ -80,12 +69,12 @@ const FilterComponent: FC<{}> = () => {
   }
 
   const onClickClearFilter = () => {
-    setStatePersonName('');
     dispatch(removeClearFilters());
+    fetchGetPage({start: 0, end: 10});
   }
 
   const handleSelectMultipleChange = (event: React.ChangeEvent<{ value: unknown }>, multiSelectOption: PersonEnum) => {
-    setStateMultiSelectValue({...stateMultiSelectValue, [multiSelectOption]: event.target.value as string[]});
+    dispatch(setFilterData({...filterData, [multiSelectOption]: event.target.value}))
   };
 
   return (
@@ -106,21 +95,21 @@ const FilterComponent: FC<{}> = () => {
             id="standard-basic"
             label={locale.Name}
             onChange={onChangeName}
-            value={statePersonName} />
+            value={filterData[PersonEnum.FORENAME]} />
         </ListItem>
-        <ListItem key={PersonEnum.FORENAME}>
+        <ListItem key={PersonEnum.GENDER}>
           <Multiselect
               dataOption={PersonEnum.GENDER}
               options={genders}
               onChange={handleSelectMultipleChange}
-              valuesSelected={stateMultiSelectValue} />
+              valuesSelected={{[PersonEnum.GENDER]: filterData[PersonEnum.GENDER] as string[]}} />
         </ListItem>
-        <ListItem key={PersonEnum.FORENAME}>
+        <ListItem key={PersonEnum.HOME_CITY}>
           <Multiselect
               dataOption={PersonEnum.HOME_CITY}
               options={cities}
               onChange={handleSelectMultipleChange}
-              valuesSelected={stateMultiSelectValue} />
+              valuesSelected={{[PersonEnum.HOME_CITY]: filterData[PersonEnum.HOME_CITY] as string[]}} />
         </ListItem>
       </List>
       <Divider />
