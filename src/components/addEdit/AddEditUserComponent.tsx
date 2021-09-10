@@ -20,6 +20,7 @@ import { es } from "date-fns/locale";
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import {useCreatePersonMutation, useGetPageValuesMutation, useUpdatePersonMutation} from "../../query/gbg-people.query";
 import {setPersonListData} from "../../actions/listActions";
+import { useSnackbar } from 'notistack';
 
 interface IAddEditComponent {
   data?: Person;
@@ -30,6 +31,7 @@ interface IAddEditComponent {
 const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
   const classes = styles();
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const [personData, setPersonData] = useState<IPersonRequest>({});
   const [request, setRequest] = useState<IPersonRequest>({});
 
@@ -45,9 +47,11 @@ const AddEditUserComponent: FC<IAddEditComponent> = ({data, onCancel}) => {
   }, [])
 
   const {mutateAsync: fetchCreatePerson} = useCreatePersonMutation({onSuccess: () => {
+      enqueueSnackbar(locale.PersonSuccessfulCreated, { variant: 'success' });
       fetchGetPage({start: 0, end: 10});
     }});
   const {mutateAsync: fetchUpdatePerson} = useUpdatePersonMutation({onSuccess: () => {
+      enqueueSnackbar(locale.PersonSuccessfulUpdated, { variant: 'success' });
       fetchGetPage({start: 0, end: 10});
     }});
   const {mutateAsync: fetchGetPage} = useGetPageValuesMutation({

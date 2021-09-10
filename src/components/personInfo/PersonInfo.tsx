@@ -14,9 +14,11 @@ import {Button} from "@material-ui/core";
 import {hideModal, showModal} from "../../actions/modalActions";
 import {AlertComponent, AddEditUserComponent} from "../";
 import {setPersonListData} from "../../actions/listActions";
+import { useSnackbar } from 'notistack';
 
 const PersonInfo: FC<PersonInfoProps> = ({id}) => {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const classes = styles();
   const [data, setData] = useState();
   const [personImage, setPersonImage] = useState();
@@ -31,6 +33,7 @@ const PersonInfo: FC<PersonInfoProps> = ({id}) => {
   })
   const {data: personData} = useGetPersonData(id);
   const {mutateAsync: fetchDeletePerson} = useDeletePersonMutation({onSuccess: () => {
+      enqueueSnackbar(locale.PersonSuccessfulDeleted, { variant: 'success' });
       fetchGetPage({start: 0, end: 10});
     }})
 

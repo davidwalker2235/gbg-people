@@ -24,6 +24,7 @@
     "date-fns": "^2.23.0",
     "history": "^4.10.1",
     "moment": "^2.29.1",
+    "notistack": "^1.0.10",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-infinite-scroll-component": "^5.0.4",
